@@ -1,0 +1,101 @@
+@startuml Lingo Bridge
+
+!theme plain
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+
+' Frontend
+package "Frontend (React)" {
+  package "Chat Components" {
+    class ChatArea {
+      - conversationId: string
+      - otherUser: User
+      + viewProfile()
+    }
+
+    class ChatSidebar {
+      - conversations: Conversation[]
+      + loadConversations()
+    }
+
+    class MessageOptions {
+      + handleTranslate()
+      + handleTextToSpeech()
+    }
+  }
+
+  package "UI Components" {
+    class Command
+    class Separator
+    class ToggleGroup
+    class Chart
+  }
+}
+' Backend
+package "Backend (Flask)" {
+  class TranslationService {
+    + text_to_text(text: string, target_language: string)
+    + text_to_speech(text: string, language: string)
+    + speech_to_text(audio_file: File, source_language: string)
+    + speech_to_speech(audio: File, source_lang: string, target_lang: string)
+  }
+
+  class FlaskApp {
+    + translate()
+    + health_check()
+  }
+}
+' Data Models
+package "Data Models" {
+  class User {
+    + uid: string
+    + displayName: string
+    + photoURL: string
+    + email: string
+  }
+
+  class Message {
+    + id: string
+    + senderId: string
+    + text: string
+    + audioUrl: string
+    + timestamp: Date
+    + isAudio: boolean
+  }
+
+  class MessageDisp {
+    + id: string
+    + senderId: string
+    + text: string
+    + audioUrl: string
+    + timestamp: Date
+    + isAudio: boolean
+    + isTranslate: boolean
+    + toText: boolean
+    + translatedText: string
+    + translatedAudioUrl: string
+  }
+
+  class Conversation {
+    + id: string
+    + participants: string[]
+    + lastMessage: string
+    + lastMessageTime: Date
+    + otherUser: User
+  }
+}
+
+' Relationships
+ChatArea --> Message : displays
+ChatArea --> User : references
+ChatSidebar --> Conversation : manages
+Message --> User : belongs to
+Conversation --> User : has participants
+
+TranslationService --> WhisperModel : uses
+FlaskApp --> TranslationService : uses
+ChatArea --> Firebase : authenticates
+ChatSidebar --> Firebase : fetches data
+MessageOptions --> Cloudinary : uploads audio
+MessageOptions --> TranslationService : calls API
+@enduml
