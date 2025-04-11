@@ -145,15 +145,15 @@ const ChatSidebar = ({ onSelectConversation, onNewChat, onLogout }: ChatSidebarP
           </Button>
         </div>
         
-        <div className="relative">
+        {/* <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
           <Input
             placeholder="Search conversations"
             className="pl-9"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+          /> */}
+        {/* </div> */}
       </div>
       
       {/* New Chat Button */}
